@@ -57,7 +57,15 @@ app.get("/profile", keycloak.protect(), (req, res) => {
 });
 
 // RBAC example - Only "admin" role can access
-app.get("/admin", keycloak.protect("realm:admin"), (req, res) => {
+app.get("/admin", keycloak.protect(), (req, res) => {
+  const user = req.kauth.grant.access_token.content;
+
+  // Check if the user has the "admin" role under the "my-client" client
+  const clientRoles = user.resource_access?.["my-client"]?.roles || [];
+  if (!clientRoles.includes("admin")) {
+    return res.status(403).json({ error: "Forbidden: Admin access required" });
+  }
+
   res.json({ message: "Welcome, Admin!" });
 });
 
