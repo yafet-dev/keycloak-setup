@@ -47,13 +47,15 @@ app.get("/profile", keycloak.protect(), (req, res) => {
   // Extract client roles
   const clientRoles = user.resource_access?.["my-client"]?.roles || [];
 
+  // Extract attributes
+  const attributes = user.attributes || {};
+  attributes.department = user.department || "Not Assigned";
+
   res.json({
-    username: user.preferred_username,
-    email: user.email,
+    ...user,
     realmRoles,
     clientRoles,
-    attributes: user.attributes || {},
-    user,
+    attributes,
   });
 });
 
@@ -73,7 +75,9 @@ app.get("/admin", keycloak.protect(), (req, res) => {
 // ABAC example - Requires custom attribute "department=IT"
 app.get("/it-only", keycloak.protect(), (req, res) => {
   const user = req.kauth.grant.access_token.content;
-  if (user.attributes?.department?.includes("IT")) {
+  const department = user.department || user.attributes?.department;
+
+  if (department === "IT") {
     res.json({ message: "Welcome, IT Department!" });
   } else {
     res.status(403).json({ message: "Access Denied" });
