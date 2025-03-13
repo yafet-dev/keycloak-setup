@@ -40,10 +40,18 @@ app.use(keycloak.middleware());
 // Protected route (Requires authentication)
 app.get("/profile", keycloak.protect(), (req, res) => {
   const user = req.kauth.grant.access_token.content;
+
+  // Extract realm roles
+  const realmRoles = user.realm_access?.roles || [];
+
+  // Extract client roles
+  const clientRoles = user.resource_access?.["my-client"]?.roles || [];
+
   res.json({
     username: user.preferred_username,
     email: user.email,
-    roles: user.realm_access.roles,
+    realmRoles,
+    clientRoles,
     attributes: user.attributes || {},
   });
 });
