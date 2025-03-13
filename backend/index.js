@@ -65,7 +65,7 @@ app.get("/it-only", keycloak.protect(), (req, res) => {
 
 // Login route - Redirect to front-end /profile after authentication
 app.get("/login", keycloak.protect(), (req, res) => {
-  res.redirect(`${FRONTEND_URL}/profile`); // Redirect to front-end /profile
+  res.redirect(`/profile`); // Redirect to front-end /profile
 });
 
 // Logout route - Redirect to front-end home page after logout
