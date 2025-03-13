@@ -53,6 +53,7 @@ app.get("/profile", keycloak.protect(), (req, res) => {
     realmRoles,
     clientRoles,
     attributes: user.attributes || {},
+    user,
   });
 });
 
