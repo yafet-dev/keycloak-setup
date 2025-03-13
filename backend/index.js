@@ -63,7 +63,7 @@ app.get("/it-only", keycloak.protect(), (req, res) => {
 
 // Login route
 app.get("/login", keycloak.protect(), (req, res) => {
-  res.redirect(`${FRONTEND_URL}/profile`);
+  res.redirect(`${FRONTEND_URL}`);
 });
 
 // Logout route
