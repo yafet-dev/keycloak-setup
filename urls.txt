@@ -1,0 +1,2 @@
+https://keycloak-setup-front-end.vercel.app/
+https://keycloak-setup-api.vercel.app/
