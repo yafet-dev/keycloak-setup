@@ -1,5 +1,5 @@
 const config = {
-  backendUrl: "http://localhost:9000",
+  backendUrl: "https://keycloak-setup-api.vercel.app/",
 };
 
 export default config;
