@@ -1,44 +1,55 @@
+// src/App.js
 import { useEffect, useState } from "react";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Navigate,
+} from "react-router-dom";
 import axios from "axios";
 import config from "./config";
+import Profile from "./Profile";
 
 function App() {
-  const [user, setUser] = useState(null);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   useEffect(() => {
-    async function fetchProfile() {
+    async function checkAuth() {
       try {
-        const response = await axios.get(`${config.backendUrl}/profile`, {
+        await axios.get(`${config.backendUrl}/profile`, {
           withCredentials: true,
         });
-        setUser(response.data);
+        setIsAuthenticated(true);
       } catch (error) {
-        console.log("Not authenticated");
+        setIsAuthenticated(false);
       }
     }
-    fetchProfile();
+    checkAuth();
   }, []);
 
   const login = () => {
     window.location.href = `${config.backendUrl}/login`;
   };
 
-  const logout = () => {
-    window.location.href = `${config.backendUrl}/logout`;
-  };
-
   return (
-    <div>
-      <h1>Keycloak Authentication</h1>
-      {user ? (
-        <>
-          <pre>{JSON.stringify(user, null, 2)}</pre>
-          <button onClick={logout}>Logout</button>
-        </>
-      ) : (
-        <button onClick={login}>Login</button>
-      )}
-    </div>
+    <Router>
+      <Routes>
+        <Route
+          path="/"
+          element={
+            <div>
+              <h1>Keycloak Authentication</h1>
+              {isAuthenticated ? (
+                <Navigate to="/profile" replace />
+              ) : (
+                <button onClick={login}>Login</button>
+              )}
+            </div>
+          }
+        />
+        <Route path="/profile" element={<Profile />} />
+      </Routes>
+    </Router>
   );
 }
 

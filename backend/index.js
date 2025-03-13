@@ -4,6 +4,11 @@ const Keycloak = require("keycloak-connect");
 const cors = require("cors");
 
 const app = express();
+
+// Define the front-end and back-end URLs
+const FRONTEND_URL = "https://keycloak-setup-front-end.vercel.app";
+const BACKEND_URL = "https://keycloak-setup-api.vercel.app";
+
 app.use(cors());
 app.use(express.json());
 
@@ -58,15 +63,15 @@ app.get("/it-only", keycloak.protect(), (req, res) => {
   }
 });
 
-// Login route
+// Login route - Redirect to front-end /profile after authentication
 app.get("/login", keycloak.protect(), (req, res) => {
-  res.redirect("/profile");
+  res.redirect(`${FRONTEND_URL}/profile`); // Redirect to front-end /profile
 });
 
-// Logout route
+// Logout route - Redirect to front-end home page after logout
 app.get("/logout", (req, res) => {
   req.logout();
-  res.redirect(keycloak.logoutUrl());
+  res.redirect(FRONTEND_URL); // Redirect to front-end home page
 });
 
-app.listen(9000, () => console.log("Server running on http://localhost:3000"));
+app.listen(9000, () => console.log(`Server running on ${BACKEND_URL}`));
