@@ -1,4 +1,3 @@
-// Import dependencies
 const express = require("express");
 const session = require("express-session");
 const Keycloak = require("keycloak-connect");
@@ -7,18 +6,6 @@ const cors = require("cors");
 const app = express();
 app.use(cors());
 app.use(express.json());
-
-// Configurable backend variables
-const PORT = 9000;
-const FRONTEND_URL = "https://keycloak-setup-front-end.vercel.app";
-const KEYCLOAK_CONFIG = {
-  realm: "test",
-  "auth-server-url": "https://auth.zergaw.com",
-  "ssl-required": "external",
-  resource: "my-client",
-  "public-client": true,
-  "confidential-port": 0,
-};
 
 // Session setup
 const memoryStore = new session.MemoryStore();
@@ -32,7 +19,17 @@ app.use(
 );
 
 // Keycloak setup
-const keycloak = new Keycloak({ store: memoryStore }, KEYCLOAK_CONFIG);
+const keycloak = new Keycloak(
+  { store: memoryStore },
+  {
+    realm: "test",
+    "auth-server-url": "https://auth.zergaw.com",
+    "ssl-required": "external",
+    resource: "my-client",
+    "public-client": true,
+    "confidential-port": 0,
+  }
+);
 app.use(keycloak.middleware());
 
 // Protected route (Requires authentication)
@@ -63,7 +60,7 @@ app.get("/it-only", keycloak.protect(), (req, res) => {
 
 // Login route
 app.get("/login", keycloak.protect(), (req, res) => {
-  res.redirect(`${FRONTEND_URL}`);
+  res.redirect("/profile");
 });
 
 // Logout route
@@ -72,6 +69,4 @@ app.get("/logout", (req, res) => {
   res.redirect(keycloak.logoutUrl());
 });
 
-app.listen(PORT, () =>
-  console.log(`Server running on http://localhost:${PORT}`)
-);
+app.listen(9000, () => console.log("Server running on http://localhost:3000"));
