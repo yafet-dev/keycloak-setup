@@ -1,4 +1,3 @@
-// Import dependencies
 const express = require("express");
 const session = require("express-session");
 const Keycloak = require("keycloak-connect");

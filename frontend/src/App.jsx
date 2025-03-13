@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
+import config from "./config";
 
 function App() {
   const [user, setUser] = useState(null);
@@ -7,7 +8,7 @@ function App() {
   useEffect(() => {
     async function fetchProfile() {
       try {
-        const response = await axios.get("http://localhost:9000/profile", {
+        const response = await axios.get(`${config.backendUrl}/profile`, {
           withCredentials: true,
         });
         setUser(response.data);
@@ -19,11 +20,11 @@ function App() {
   }, []);
 
   const login = () => {
-    window.location.href = "http://localhost:9000/login";
+    window.location.href = `${config.backendUrl}/login`;
   };
 
   const logout = () => {
-    window.location.href = "http://localhost:9000/logout";
+    window.location.href = `${config.backendUrl}/logout`;
   };
 
   return (
