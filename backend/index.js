@@ -52,6 +52,7 @@ app.get("/profile", keycloak.protect(), (req, res) => {
   attributes.department = user.department || "Not Assigned";
 
   res.json({
+    user,
     realmRoles,
     clientRoles,
     attributes,
